@@ -143,44 +143,44 @@ QUESTIONS:
 /* Q10: Produce a list of facilities with a total revenue less than 1000.
 The output of facility name and total revenue, sorted by revenue. Remember
 that there's a different cost for guests and members! */
- 		SELECT sub.name, SUM(sub.revenue) AS totalrevenue
-		FROM 
-            (SELECT f.name,
-                CASE WHEN b.memid = 0 THEN b.slots * f.guestcost
-                    ELSE b.slots * f.membercost
-                END AS revenue
-                FROM Facilities as f
-                INNER JOIN Bookings as b
-                    ON f.facid = b.facid
+SELECT sub.name, SUM(sub.revenue) AS totalrevenue
+FROM 
+    (SELECT f.name,
+       	CASE WHEN b.memid = 0 THEN b.slots * f.guestcost
+            ELSE b.slots * f.membercost
+            END AS revenue
+    FROM Facilities as f
+        INNER JOIN Bookings as b
+            ON f.facid = b.facid
                 
-            )sub
-        GROUP BY sub.name
-        HAVING totalrevenue < 1000;
+    )sub
+GROUP BY sub.name
+HAVING totalrevenue < 1000;
 /* Q11: Produce a report of members and who recommended them in alphabetic surname,firstname order */
 SELECT m1.surname ||', '|| m1.firstname AS name,
-            CASE WHEN m1.recommendedby = '' THEN 'none'
-            ELSE m2.surname||', ' || m2.firstname
-            END as recommender
+    CASE WHEN m1.recommendedby = '' THEN 'none'
+        ELSE m2.surname||', ' || m2.firstname
+    END as recommender
 FROM Members AS m1
     LEFT JOIN Members AS m2
         ON m1.recommendedby = m2.memid
 ORDER BY m1.surname, m1.firstname;
 
 /* Q12: Find the facilities with their usage by member, but not guests */
-		SELECT f.name AS facname, m.surname||', '||m.firstname AS memname,
-             SUM(slots) AS usage
-        FROM Bookings as b
-            INNER JOIN Members as m
-                ON b.memid = m.memid
-                INNER JOIN Facilities as f
-                    ON b.facid = f.facid
-        WHERE b.memid != 0
-        GROUP BY facname, memname;
-
-/* Q13: Find the facilities usage by month, but not guests */
-		SELECT f.name AS facname, strftime('%m',b.starttime) as month,
-             SUM(slots) AS usage
-        FROM Bookings as b
+SELECT f.name AS facname, m.surname||', '||m.firstname AS memname,
+    SUM(slots) AS usage
+FROM Bookings as b
+    INNER JOIN Members as m
+        ON b.memid = m.memid
             INNER JOIN Facilities as f
                 ON b.facid = f.facid
-        GROUP BY facname, month;
+WHERE b.memid != 0
+GROUP BY facname, memname;
+
+/* Q13: Find the facilities usage by month, but not guests */
+SELECT f.name AS facname, strftime('%m',b.starttime) as month,
+    SUM(slots) AS usage
+FROM Bookings as b
+    INNER JOIN Facilities as f
+        ON b.facid = f.facid
+GROUP BY facname, month;
