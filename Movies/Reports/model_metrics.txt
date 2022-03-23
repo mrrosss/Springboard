@@ -1,0 +1,18 @@
+
+
+Final model parameters and hyperparameters:
+Model kind: XGBRegressor
+colsample_bytree (subsample ratio of columns when constructing each tree): 0.4
+learning_rate: 0.05
+max_depth (maximum tree depth for base learners): 4
+min_child_weight (minimum sum of hessian instance weight needed in a child): 6
+n_estimators (number of gradient boosted trees): 325
+objective (learning task and objective): 'reg:squarederror
+subsample (sample ratio of training instance): 1
+
+Final model performance metrics:
+Mean cross validation train score: 0.604
+Standard deviation in cross validation training scores: 0.032
+R2 score on the training data: 0.803
+R2 score on the test data: 0.605
+RMSE: 1.847
